@@ -1,4 +1,7 @@
+streamlit
+pandas
+numpy
 nltk
-unidecode
-sentence_transformers
+sentence-transformers
 matplotlib
+unidecode

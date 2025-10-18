@@ -14,7 +14,6 @@ from pathlib import Path
 nltk.download("stopwords")
 stop_words = set(stopwords.words("english"))
 stop_words.remove("not")  # keep negations
-
 stop_words.remove("no")   # keep negations
 
 DATA_PATH = Path(r"data\data_project.xlsx")
@@ -66,10 +65,11 @@ def reset_app():
     The skill embeddings are preserved in cache to avoid recomputing them, improving performance
     when restarting or reanalyzing user inputs.
     """
-    keys_to_keep = ["model", "embedded_tastes_cache", "embedded_skills_cache"]
+    keys_to_keep = ["model", "embedded_tastes", "embedded_skills"]
     for key in list(st.session_state.keys()):
         if key not in keys_to_keep:
             del st.session_state[key]
+      
     st.session_state["step"] = 1
     st.rerun()
 
@@ -115,10 +115,8 @@ if st.session_state["step"] == 1:
         with st.spinner("Analyzing your preferences..."):
             # Encode tastes only once
             if "embedded_tastes" not in st.session_state:
-                st.session_state["embedded_tastes"] = st.session_state["model"].encode(
-                    st.session_state["Tastes"]["Tastes"].apply(normalize),
-                    convert_to_tensor=True
-                )
+                st.session_state["embedded_tastes"] = st.session_state["model"].encode( 
+                    st.session_state["Tastes"]["Tastes"].apply(normalize), convert_to_tensor=True)
             
             # Clean and embed user inputs
             cleaned_user_input1 = normalize(st.session_state["user_input1"])
@@ -133,7 +131,7 @@ if st.session_state["step"] == 1:
             # Compute preference score
             tastes_df = st.session_state["Tastes"].copy()
             tastes_df["sim1"] = similarities1
-            tastes_df["sim2"] = np.where(similarities2 > 0, similarities2, -similarities2)
+            tastes_df["sim2"] = np.where(similarities2 > 0, similarities2, - similarities2)
             tastes_df["Score"] = tastes_df["sim1"] - tastes_df["sim2"]
             tastes_df = tastes_df.sort_values(by="Score", ascending=False).reset_index(drop=True)
             
@@ -238,31 +236,20 @@ elif st.session_state["step"] == 2:
                 Jobs_competencies = Skills_domain.groupby("Job").apply(
                     lambda x: pd.Series({
                         'Competency': ", ".join(x['Competency'].astype(str)),
-                        'Weights': dict(zip(x['Competency'], x['Weight'])),
-                        'CompetencyCount': len(x)
+                        'Weights': dict(zip(x['Competency'], x['Weight']))
                     })
                 ).reset_index()
+          
                 Jobs_competencies["Score"] = 0.0
-                Jobs_competencies["MatchedCompetencies"] = 0
                 
-                for competency, score in zip(
-                    st.session_state["Skills_competency"]["Competency"],
-                    st.session_state["Skills_competency"]["Score"]
-                ):
+                for competency, score in zip(st.session_state["Skills_competency"]["Competency"], st.session_state["Skills_competency"]["Score"]):
                     for index, row in Jobs_competencies.iterrows():
                         job_skills = row['Competency'].split(', ')
+                        
                         if competency in job_skills:
                             Jobs_competencies.at[index, 'Score'] += score
-                            Jobs_competencies.at[index, 'MatchedCompetencies'] += 1
-                
-                # Compute match percentage
-                Jobs_competencies["MatchPercentage"] = (
-                    Jobs_competencies["MatchedCompetencies"] / Jobs_competencies["CompetencyCount"] * 100
-                ).round(1)
-                
-                st.session_state["Jobs_competencies"] = Jobs_competencies.sort_values(
-                    by="Score", ascending=False
-                ).reset_index(drop=True)
+            
+                st.session_state["Jobs_competencies"] = Jobs_competencies.sort_values(by="Score", ascending=False).reset_index(drop=True)
                 
                 st.session_state["step"] = 3
                 st.rerun()
@@ -276,10 +263,12 @@ elif st.session_state["step"] == 3:
     # Top 3 matching jobs
     st.subheader("🏆 Top 3 Jobs Matching Your Profile")
     top3_jobs = st.session_state["Jobs_competencies"].head(3)
-    
+
     cols = st.columns(3)
     medals = ["🥇", "🥈", "🥉"]
-    for i, (idx, row) in enumerate(top3_jobs.iterrows()):
+    for val in top3_jobs.iterrows():
+        (i, row) = val
+
         with cols[i]:
             st.metric(
                 label=f"{medals[i]} #{i+1}",
@@ -318,24 +307,24 @@ elif st.session_state["step"] == 3:
     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
     angles += angles[:1]
     
-    fig4, ax4 = plt.subplots(figsize=(8, 8), subplot_kw=dict(projection='polar'))
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(projection='polar'))
     colors_radar = plt.cm.Set2(np.linspace(0, 1, len(radar_data)))
     
     for idx, (i, row) in enumerate(radar_data.iterrows()):
         values = [row['sim3'], row['sim4'], row['sim5']]
         values += values[:1]
-        ax4.plot(angles, values, 'o-', linewidth=2, label=row['Competency'], color=colors_radar[idx])
-        ax4.fill(angles, values, alpha=0.15, color=colors_radar[idx])
+        ax.plot(angles, values, 'o-', linewidth=2, label=row['Competency'], color=colors_radar[idx])
+        ax.fill(angles, values, alpha=0.15, color=colors_radar[idx])
     
-    ax4.set_xticks(angles[:-1])
-    ax4.set_xticklabels(categories, fontsize=10)
-    ax4.set_ylim(0, 1)
-    ax4.set_title("Similarity Scores Across Different Inputs", fontsize=14, fontweight='bold', pad=20)
-    ax4.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=9)
-    ax4.grid(True)
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories, fontsize=10)
+    ax.set_ylim(0, 1)
+    ax.set_title("Similarity Scores Across Different Inputs", fontsize=14, fontweight='bold', pad=20)
+    ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=9)
+    ax.grid(True)
     
     plt.tight_layout()
-    st.pyplot(fig4)
+    st.pyplot(fig)
     plt.close()
     
     with st.expander("📋 Detailed Competency Scores"):
