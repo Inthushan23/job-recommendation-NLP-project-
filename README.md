@@ -66,4 +66,5 @@ The dataset is an Excel file (`data_project.xlsx`) consisting of three sheets:
 * Inthushan Suthakaran ([GitHub](https://github.com/Inthushan23))
 * Aurélien Verdier ([GitHub](https://github.com/aurelien0703))
 * Augustin Samier ([GitHub](https://github.com/AugustinSamier))
+* Victor Lei ([GitHub](https://github.com/Voutour))
 
