@@ -1,3 +1,2 @@
-*.pptx
-*.vscode
-*presentation.pptx
+.vscode
+__pycache__
