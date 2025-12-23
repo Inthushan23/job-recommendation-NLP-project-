@@ -18,7 +18,6 @@ STOP_WORDS.remove("no")
 
 
 class ProcessData:
-    @staticmethod
     def normalize(text: str):
         """
         Clean and format text for NLP processing.

@@ -1,5 +1,6 @@
 *__pycache__/
 *.pptx
-*.vscode
+*.vscode/
 *.xlsx
 *.pkl
+.env

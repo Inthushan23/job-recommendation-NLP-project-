@@ -5,6 +5,7 @@ import pickle
 
 from ..config import DATA_DIR
 
+
 # Le lancer qu'une fois au début
 def precalculate_embeddings():
     tastes_df, _, skills_df = load_file()  
