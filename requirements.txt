@@ -6,3 +6,7 @@ nltk
 sentence-transformers
 matplotlib
 unidecode
+requests
+dotenv
+uvicorn
+fastapi

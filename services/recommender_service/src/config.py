@@ -5,4 +5,4 @@ load_dotenv()
 
 
 ENCODER_MODEL = os.getenv("MODEL", "usc-isi/sbert-roberta-large-anli-mnli-snli")
-URL = os.getenv("API_URL", "http://localhost:8000")
+URL = os.getenv("API_URL", "http://recommender:8000")

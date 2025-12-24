@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from ....data_service.src.repository.load_data import load_file, load_embeddings_tastes, load_embeddings_skills
-from ....data_service.src.domain.data_processing import ProcessData
+from data_service.repository.load_data import load_file, load_embeddings_tastes, load_embeddings_skills
+from data_service.domain.data_processing import ProcessData
 from .encoder import Encoder
 
  

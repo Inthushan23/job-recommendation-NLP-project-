@@ -1,7 +1,8 @@
-from ..repository.load_data import load_file
-from ....recommender_service.src.domain.encoder import Encoder
-from ..domain.data_processing import ProcessData
 import pickle
+
+from ..repository.load_data import load_file
+from src.domain.encoder import Encoder
+from ..domain.data_processing import ProcessData
 
 from ..config import DATA_DIR
 
@@ -55,6 +56,3 @@ def precalculate_embeddings():
         print(f"{domain}: {len(domain_skills)} skills vectorisés → {filename}")
     
     print(f"Domaines traités: {list(skills_df['Domain'].unique())}")
-
-if __name__ == "__main__":
-    precalculate_embeddings()

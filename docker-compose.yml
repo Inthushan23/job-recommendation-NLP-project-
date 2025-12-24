@@ -1,0 +1,21 @@
+services:
+  recommender:
+    build:     
+      context: .
+      dockerfile: ./services/recommender_service/Dockerfile
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+
+  ui:
+    build: 
+      context: .
+      dockerfile: ./services/ui/Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - recommender
+    volumes:
+      - ./data:/data

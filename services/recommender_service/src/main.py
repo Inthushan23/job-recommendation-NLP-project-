@@ -4,7 +4,8 @@ from .domain.recommender import Recommender
 from .domain.encoder import Encoder
 
 from fastapi import FastAPI
-from ...data_service.src.scripts.precalc_embeddings import precalculate_embeddings
+from data_service.scripts.precalc_embeddings import precalculate_embeddings
+
 
 app = FastAPI()
 
