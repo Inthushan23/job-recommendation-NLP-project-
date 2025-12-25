@@ -17,4 +17,4 @@ RUN chmod +x /app/wait-for-it.sh
 
 EXPOSE 8501
 
-CMD ["./wait-for-it.sh", "recommender:8000", "--", "streamlit", "run", "src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["./wait-for-it.sh", "recommender:8000", "-t", "60","--", "streamlit", "run", "src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
