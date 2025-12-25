@@ -1,7 +1,6 @@
 *__pycache__/
 *.pptx
 *.vscode/
-*.xlsx
 *.pkl
 .env
 *.egg-info/
