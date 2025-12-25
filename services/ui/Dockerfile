@@ -11,7 +11,6 @@ COPY ./services/recommender_service/src/config.py ./src/config.py
 COPY setup.py .
 RUN pip install -e .
 
-# CMD ["streamlit", "run", "src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
 COPY services/wait-for-it.sh /app/wait-for-it.sh
 RUN chmod +x /app/wait-for-it.sh
 
