@@ -1,5 +1,6 @@
 services:
   recommender:
+    image: ghcr.io/inthushan23/projet-nlp-recommender:latest
     build:     
       context: .
       dockerfile: ./services/recommender_service/Dockerfile
@@ -10,6 +11,7 @@ services:
       - ./data:/data
 
   ui:
+    image: ghcr.io/inthushan23/projet-nlp-ui:latest
     build: 
       context: .
       dockerfile: ./services/ui/Dockerfile

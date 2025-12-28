@@ -4,8 +4,9 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
- 
-COPY ./services/recommender_service/src ./src 
-COPY ./services/data_service/src ./data_service
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY ./data ./data 
+COPY ./services/recommender_service/src ./services/recommender_service/src
+COPY ./services/data_service/src ./services/data_service/src
+
+CMD ["uvicorn", "services.recommender_service.src.main:app", "--host", "0.0.0.0", "--port", "8000"]

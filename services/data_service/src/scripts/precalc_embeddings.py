@@ -1,7 +1,7 @@
 import pickle
 
 from ..repository.load_data import load_file
-from src.domain.encoder import Encoder
+from services.recommender_service.src.domain.encoder import Encoder
 from ..domain.data_processing import ProcessData
 
 from ..config import DATA_DIR

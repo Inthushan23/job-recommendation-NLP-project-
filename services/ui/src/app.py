@@ -6,7 +6,7 @@ import requests
 
 
 
-from src.config import URL
+from services.recommender_service.src.config import URL
 
 st.set_page_config(page_title="Job Finder", layout="wide")
 st.title("🔍 Job Finder")
