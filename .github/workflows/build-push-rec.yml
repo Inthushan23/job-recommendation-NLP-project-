@@ -3,7 +3,7 @@ name: Build & Push API to ECR
 on: [push]
 
 jobs:
-  build-push:
+  build-push-api:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,18 +20,11 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image
-        run: |
-          docker build \
-            -t ecr-g3mg01:latest \
-            services/recommender_service
+      - name: Build Docker image (API)
+        run: docker build -t ecr-g3mg01:api -f services/recommender_service/Dockerfile .
 
-      - name: Tag Docker image
-        run: |
-          docker tag ecr-g3mg01:latest \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:latest
+      - name: Tag Docker image (API)
+        run: docker tag ecr-g3mg01:api ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:api
 
-      - name: Push Docker image to ECR
-        run: |
-          docker push \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:latest
+      - name: Push Docker image (API)
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:api
