@@ -1,10 +1,11 @@
-- name: Créer le bucket S3 pour le state Terraform
-  run: |
-    aws s3api create-bucket \
-     --bucket s3-g3mg01 \
-     --region eu-west-3 \
-     --create-bucket-configuration LocationConstraint=eu-west-3 \
-     2>/dev/null || echo "Bucket déjà existant"
-    aws s3api put-bucket-versioning \
-     --bucket s3-g3mg01 \
-     --versioning-configuration Status=Enabled
+name: Mon Workflow
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Créer le bucket S3 pour le state Terraform
+        run: |
+          aws s3api create-bucket --bucket s3-g3mg01 --region eu-west-3 --create-bucket-configuration LocationConstraint=eu-west-3 2>/dev/null || echo "Bucket déjà existant"
+          aws s3api put-bucket-versioning --bucket s3-g3mg01 --versioning-configuration Status=Enabled
