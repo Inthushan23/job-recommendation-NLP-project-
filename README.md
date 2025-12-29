@@ -75,11 +75,11 @@ pip install -r requirements.txt
 ```
 
 ## 2. Usage
-
+Before, starting the project start docker desktop.
 To run the app, execute the following command from the root of the project:
 
 ```
-docker-compose
+docker compose up
 ```
 
 ## 3. Data
@@ -96,5 +96,5 @@ The dataset is an Excel file (`job_data.xlsx`) consisting of three sheets:
 * Aurélien Verdier ([GitHub](https://github.com/aurelien0703))
 * Augustin Samier ([GitHub](https://github.com/AugustinSamier))
 * Victor Lei ([GitHub](https://github.com/Voutour))
-* Benjamin AUER 
+* Benjamin AUER ([GitHub](https://github.com/BenjaminAue))
 
