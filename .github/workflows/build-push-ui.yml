@@ -1,0 +1,35 @@
+name: Build & Push UI to ECR
+
+
+on:
+  push:
+    branches: ["mlops"]
+    paths:
+      - services/ui/**
+      
+jobs:
+  build-push-ui:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image (UI)
+        run: docker build -t ecr-g3mg01:ui -f services/ui/Dockerfile .
+
+      - name: Tag Docker image (UI)
+        run: docker tag ecr-g3mg01:ui ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:ui
+
+      - name: Push Docker image (UI)
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:ui
