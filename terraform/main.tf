@@ -38,10 +38,15 @@ module "ecs_G3MG01" {
   cluster_name = "ecs-g3mg01"
 }
 
-# App Runner Service Module
-# Décommenté quand vous avez une image Docker dans ECR
-# module "apprunner_G0MG00" {
-#   source       = "./modules/apprunner"
-#   service_name = "apprunner-g3mg01"
-#   ecr_repo_url = module.ecr_G0MG00.repository_url
-# }
+ # App Runner Service Module
+ # Décommenté quand vous avez une image Docker dans ECR
+module "apprunner_g3mg01" {
+  source = "./modules/apprunner"
+
+  api_service_name = "apprunner-g3mg01-api"
+  ui_service_name  = "apprunner-g3mg01-ui"
+
+  # Correction : Utiliser "ecr_G3MG01" (avec majuscules) comme défini ligne 36
+  api_ecr_repo_url = module.ecr_G3MG01.repository_url
+  ui_ecr_repo_url  = module.ecr_G3MG01.repository_url
+}
