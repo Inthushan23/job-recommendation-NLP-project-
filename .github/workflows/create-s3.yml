@@ -1,5 +1,7 @@
 name: Mon Workflow
-on: [push]
+on: 
+  push:
+    branches: [mlops]
 
 jobs:
   deploy:
