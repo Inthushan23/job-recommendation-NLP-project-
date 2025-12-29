@@ -1,6 +1,10 @@
 name: Build & Push API to ECR
 
-on: [push]
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - services/recommender_service/**
 
 jobs:
   build-push-api:
