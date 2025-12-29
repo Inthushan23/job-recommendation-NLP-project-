@@ -20,18 +20,20 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Create ECR repository if not exists
+        run: |
+          aws ecr describe-repositories --repository-names ecr-g3mg01 || \
+          aws ecr create-repository --repository-name ecr-g3mg01
+
       - name: Build Docker image
         run: |
-          docker build \
-            -t ecr-ui:latest \
-            -f services/ui/Dockerfile .
+          docker build -t ecr-g3mg01:latest .
 
       - name: Tag Docker image
         run: |
-          docker tag ecr-ui:latest \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-ui:latest
+          docker tag ecr-g3mg01:latest \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:latest
 
       - name: Push Docker image to ECR
         run: |
-          docker push \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-ui:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:latest
