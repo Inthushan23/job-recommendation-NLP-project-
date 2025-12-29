@@ -1,10 +1,7 @@
 name: Upload Excel to S3
 
-on:
-  push:
-    branches: ["mlops"]
-    paths:
-      - data/job_data.xlsx  
+on: [push]
+   
 
 jobs:
   upload-to-s3:
