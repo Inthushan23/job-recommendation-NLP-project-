@@ -20,18 +20,11 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image
-        run: |
-          docker build \
-            -t ecr-g3mg01-ui:latest \
-            -f services/ui/Dockerfile .
+      - name: Build Docker image (UI)
+        run: docker build -t ecr-g3mg01:ui services/ui
 
-      - name: Tag Docker image
-        run: |
-          docker tag ecr-g3mg01-ui:latest \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01-ui:latest
+      - name: Tag Docker image (UI)
+        run: docker tag ecr-g3mg01:ui ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:ui
 
-      - name: Push Docker image to ECR
-        run: |
-          docker push \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01-ui:latest
+      - name: Push Docker image (UI)
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:ui
