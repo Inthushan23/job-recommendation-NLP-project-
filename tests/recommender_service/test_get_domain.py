@@ -5,6 +5,7 @@ recommender = Recommender()
 encoder = Encoder()
 
 
+# We check if we are obtaining the correct domains for given inputs.
 def test_get_domain():
     assert (recommender.get_domain("I like Data and AI", "I do not like Finance", encoder)[1]  == "IT")
     assert (recommender.get_domain("I like helping people who have been injured. Giving them medicine.", "I do not like Finance", encoder)[1]  == "Medicine")
@@ -14,6 +15,7 @@ def test_get_domain():
     assert (recommender.get_domain("I like animals, plants and gardening.", "I don't like finance", encoder)[1]  == "Nature")
     
 
+# We check that the outputs are not empty.
 def test_question_based_sim():
     jobs_competencies, skills_competency = recommender.question_based_sim("IT", "Data cleaning, data visualization", "I worked on a data visualization project using Power BI.", "SQL, DAX", encoder)
 
