@@ -7,3 +7,6 @@
 *.pytest_cache/
 *.gitkeep
 *.gitignore
+tests
+terraform
+.github
