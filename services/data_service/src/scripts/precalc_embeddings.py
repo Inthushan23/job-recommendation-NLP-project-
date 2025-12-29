@@ -1,13 +1,20 @@
 import pickle
+from io import BytesIO
+import boto3
 
 from ..repository.load_data import load_file
 from services.recommender_service.src.domain.encoder import Encoder
 from ..domain.data_processing import ProcessData
 
-from ..config import DATA_DIR
+from ..config import BUCKET_NAME, DATA_KEY
 
+s3 = boto3.client("s3")
 
-# Le lancer qu'une fois au début
+def upload_to_s3(data: bytes, key: str):
+    """Upload un objet en mémoire dans S3"""
+    s3.put_object(Bucket=BUCKET_NAME, Key=f"{DATA_KEY}{key}", Body=data)
+    print(f"Fichier uploadé dans S3: {DATA_KEY}{key}")
+
 def precalculate_embeddings():
     tastes_df, _, skills_df = load_file()  
     encoder = Encoder()
@@ -25,8 +32,8 @@ def precalculate_embeddings():
         'dataframe': tastes_df.to_dict()
     }
 
-    with open(DATA_DIR / 'tastes_embeddings.pkl', 'wb') as f:
-        pickle.dump(tastes_data, f)
+    # Upload dans S3
+    upload_to_s3(pickle.dumps(tastes_data), "tastes_embeddings.pkl")
 
     print("Vectorisation des Skills par domaine...")
     for domain in skills_df["Domain"].unique():
@@ -48,11 +55,9 @@ def precalculate_embeddings():
             'weights': domain_skills["Weight"].tolist() if "Weight" in domain_skills.columns else [1] * len(domain_skills)
         }
         
-        # Sauvegarder
-        filename = DATA_DIR / f'skills_embeddings_{domain.replace(" ", "_")}.pkl'
-        with open(filename, 'wb') as f:
-            pickle.dump(skills_data, f)
+        filename = f'skills_embeddings_{domain.replace(" ", "_")}.pkl'
+        upload_to_s3(pickle.dumps(skills_data), filename)
         
-        print(f"{domain}: {len(domain_skills)} skills vectorisés → {filename}")
+        print(f"{domain}: {len(domain_skills)} skills vectorisés → {DATA_KEY}{filename}")
     
     print(f"Domaines traités: {list(skills_df['Domain'].unique())}")

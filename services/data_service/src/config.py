@@ -1,5 +1,12 @@
+import os
 from pathlib import Path 
+from dotenv import load_dotenv
 
+load_dotenv()
+
+
+BUCKET_NAME = os.getenv("BUCKET_NAME", "s3-g3mg01")
+DATA_KEY = os.getenv("DATA_KEY", "data/my_data.xlsx") 
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 

@@ -11,3 +11,4 @@ dotenv
 uvicorn
 fastapi
 pytest
+boto3
