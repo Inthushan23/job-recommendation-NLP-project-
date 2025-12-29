@@ -24,7 +24,7 @@ jobs:
         run: |
           docker build \
             -t ecr-ui:latest \
-            services/ui
+            -f services/ui/Dockerfile .
 
       - name: Tag Docker image
         run: |
