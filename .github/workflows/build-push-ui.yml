@@ -21,7 +21,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker image (UI)
-        run: docker build -t ecr-g3mg01:ui services/ui
+        run: docker build -t ecr-g3mg01:ui .
 
       - name: Tag Docker image (UI)
         run: docker tag ecr-g3mg01:ui ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:ui
