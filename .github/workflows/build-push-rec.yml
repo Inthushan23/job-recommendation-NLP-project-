@@ -2,7 +2,7 @@ name: Build & Push API to ECR
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "mlops" ]
     paths:
       - services/recommender_service/**
 
