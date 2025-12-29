@@ -1,0 +1,26 @@
+name: Mon Workflow
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # si vous utilisez des credentials temporaires, ajoutez:
+          # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: eu-west-3
+
+      - name: Vérifier identité AWS (diagnostic)
+        run: aws sts get-caller-identity
+
+      - name: Créer le bucket S3 pour le state Terraform
+        run: |
+          aws s3api create-bucket --bucket s3-g3mg01 --region eu-west-3 --create-bucket-configuration LocationConstraint=eu-west-3 2>/dev/null || echo "Bucket déjà existant"
+          aws s3api put-bucket-versioning --bucket s3-g3mg01 --versioning-configuration Status=Enabled
