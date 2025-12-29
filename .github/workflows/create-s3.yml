@@ -1,9 +1,5 @@
 name: Mon Workflow
-on: 
-  push:
-    branches: [mlops]
-    paths:
-      - terraform/**
+on: [push]
 
 jobs:
   deploy:
