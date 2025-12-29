@@ -97,7 +97,6 @@ resource "aws_iam_role_policy" "apprunner_instance_policy" {
     ]
   })
 }
-
 # ------------------------------
 # Service App Runner pour l'API
 # ------------------------------
@@ -113,9 +112,17 @@ resource "aws_apprunner_service" "api_service" {
       image_identifier      = "${var.api_ecr_repo_url}:latest"
       image_repository_type = "ECR"
 
+      # --- CORRECTION ICI : Tout est regroupé au bon endroit ---
       image_configuration {
         port = "8000"
+        
+        runtime_environment_variables = {
+          BUCKET_NAME      = "s3-g3mg01"       
+          S3_DATA_FOLDER   = "data/"           
+          EXCEL_FILENAME   = "job_data.xlsx"   
+        }
       }
+      # ---------------------------------------------------------
     }
 
     auto_deployments_enabled = false
@@ -131,7 +138,7 @@ resource "aws_apprunner_service" "api_service" {
     protocol            = "HTTP"
     path                = "/recommender/"
     interval            = 10
-    timeout             = 60
+    timeout             = 20
     healthy_threshold   = 1
     unhealthy_threshold = 5
   }
@@ -142,7 +149,6 @@ resource "aws_apprunner_service" "api_service" {
     Project     = "MLOps-G3MG01"
   }
 }
-
 # ------------------------------
 # Service App Runner pour l'UI
 # ------------------------------

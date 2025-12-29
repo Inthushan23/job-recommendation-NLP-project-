@@ -3,6 +3,9 @@ from fastapi import APIRouter, Request
 
 router = APIRouter(prefix="/recommender")
 
+@router.get("/")
+def health_check():
+    return {"status": "ok"}
 
 @router.get("/get-df")
 def get_df(request: Request):

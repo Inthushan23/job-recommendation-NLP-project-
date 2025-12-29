@@ -6,14 +6,19 @@ from ..repository.load_data import load_file
 from services.recommender_service.src.domain.encoder import Encoder
 from ..domain.data_processing import ProcessData
 
-from ..config import BUCKET_NAME, DATA_KEY
+from ..config import BUCKET_NAME, S3_DATA_FOLDER 
 
 s3 = boto3.client("s3")
 
+
+
 def upload_to_s3(data: bytes, key: str):
     """Upload un objet en mémoire dans S3"""
-    s3.put_object(Bucket=BUCKET_NAME, Key=f"{DATA_KEY}{key}", Body=data)
-    print(f"Fichier uploadé dans S3: {DATA_KEY}{key}")
+    # Utilisation du dossier correct
+    full_key = f"{S3_DATA_FOLDER}{key}"
+    s3.put_object(Bucket=BUCKET_NAME, Key=full_key, Body=data)
+    print(f"Fichier uploadé dans S3: {full_key}")
+
 
 def precalculate_embeddings():
     tastes_df, _, skills_df = load_file()  
