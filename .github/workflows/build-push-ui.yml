@@ -1,7 +1,6 @@
 name: Build & Push UI to ECR
 
 on: [push]
-
 jobs:
   build-push-ui:
     runs-on: ubuntu-latest
@@ -21,7 +20,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker image (UI)
-        run: docker build -t ecr-g3mg01:ui .
+        run: docker build -t ecr-g3mg01:ui -f services/ui/Dockerfile .
 
       - name: Tag Docker image (UI)
         run: docker tag ecr-g3mg01:ui ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecr-g3mg01:ui
