@@ -1,6 +1,12 @@
 name: Build & Push UI to ECR
 
-on: [push]
+
+on:
+  push:
+    branches: ["mlops"]
+    paths:
+      - services/ui/**
+      
 jobs:
   build-push-ui:
     runs-on: ubuntu-latest
