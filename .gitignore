@@ -2,7 +2,6 @@
 *__pycache__/
 *.pptx
 *.vscode/
-*.pkl
 .env
 *.egg-info/
 *.pytest_cache/
