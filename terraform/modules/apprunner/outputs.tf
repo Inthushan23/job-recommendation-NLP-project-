@@ -1,4 +1,4 @@
-# Outputs pour le service API
+# Outputs related to the API service
 output "api_service_arn" {
   description = "The ARN of the App Runner API service"
   value       = aws_apprunner_service.api_service.arn
@@ -10,16 +10,16 @@ output "api_service_id" {
 }
 
 output "api_service_url" {
-  description = "The URL of the App Runner API service"
+  description = "The public URL of the API"
   value       = aws_apprunner_service.api_service.service_url
 }
 
 output "api_service_status" {
-  description = "The status of the App Runner API service"
+  description = "Current state of the API service"
   value       = aws_apprunner_service.api_service.status
 }
 
-# Outputs pour le service UI
+# Outputs related to the UI service
 output "ui_service_arn" {
   description = "The ARN of the App Runner UI service"
   value       = aws_apprunner_service.ui_service.arn
@@ -31,11 +31,11 @@ output "ui_service_id" {
 }
 
 output "ui_service_url" {
-  description = "The URL of the App Runner UI service"
+  description = "The public URL of the UI"
   value       = aws_apprunner_service.ui_service.service_url
 }
 
 output "ui_service_status" {
-  description = "The status of the App Runner UI service"
+  description = "Current state of the UI service"
   value       = aws_apprunner_service.ui_service.status
 }

@@ -1,6 +1,4 @@
-# modules/s3/main.tf
-
-# Crée le bucket S3
+# S3 bucket used to store application data
 resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
 
@@ -11,7 +9,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-# Active le versioning
+# Enable object versioning on the bucket
 resource "aws_s3_bucket_versioning" "bucket_versioning" {
   bucket = aws_s3_bucket.bucket.id
 
@@ -20,7 +18,7 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
   }
 }
 
-# Active le chiffrement côté serveur
+# Enable default server-side encryption
 resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encryption" {
   bucket = aws_s3_bucket.bucket.id
 

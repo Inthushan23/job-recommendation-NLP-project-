@@ -6,7 +6,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt 
 
 COPY ./services/ui/src ./services/ui/src
-
 COPY ./services/recommender_service/src/config.py ./services/recommender_service/src/config.py
 COPY setup.py .
 RUN pip install -e .
@@ -14,7 +13,11 @@ RUN pip install -e .
 COPY services/wait-for-it.sh /app/wait-for-it.sh
 RUN chmod +x /app/wait-for-it.sh
 
-EXPOSE 8501
+EXPOSE 8080
 
-# CMD ["./wait-for-it.sh", "recommender:8000", "-t", "60","--", "streamlit", "run", "services/ui/src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-CMD ["streamlit", "run", "services/ui/src/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "services/ui/src/app.py", \
+     "--server.port=8080", \
+     "--server.address=0.0.0.0", \
+     "--server.enableCORS=false", \
+     "--server.enableXsrfProtection=false", \
+     "--server.enableWebsocketCompression=false"]

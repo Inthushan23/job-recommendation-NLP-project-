@@ -1,52 +1,60 @@
+# Terraform setup and provider versions
 terraform {
-required_version = ">= 1.5.0"
-required_providers {
- aws = {
- source = "hashicorp/aws"
- version = "~> 5.0"
- }
-}
-# Configuration du backend S3 pour stocker le state
-backend "s3" {
- bucket = "s3-g3mg01"
- key = "g3mg01.tfstate"
- region = "eu-west-3"
- encrypt = true
-}
+  required_version = ">= 1.5.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+
+  # Remote state stored in S3
+  backend "s3" {
+    bucket  = "s3-g3mg01"
+    key     = "g3mg01.tfstate"
+    region  = "eu-west-3"
+    encrypt = true
+  }
 }
 
-
+# AWS provider configuration
 provider "aws" {
   region = var.region
 }
 
-# S3 Bucket Module
-# module "s3_G3MG01" {
-#   source      = "./modules/s3"
-#  bucket_name = "s3-g3mg01"
-#}
+# Fetch the default VPC
+data "aws_vpc" "default" {
+  default = true
+}
 
-# ECR Repository Module
+# Fetch all subnets from the default VPC
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+# ECR module (Docker image registry)
 module "ecr_G3MG01" {
   source    = "./modules/ecr"
   repo_name = "ecr-g3mg01"
 }
 
-# ECS Cluster Module
+# ECS module (cluster, services, load balancer)
 module "ecs_G3MG01" {
   source       = "./modules/ecs"
   cluster_name = "ecs-g3mg01"
-}
 
- # App Runner Service Module
- # Décommenté quand vous avez une image Docker dans ECR
-module "apprunner_g3mg01" {
-  source = "./modules/apprunner"
+  # Network info discovered automatically
+  vpc_id            = data.aws_vpc.default.id
+  public_subnet_ids = data.aws_subnets.default.ids
 
-  api_service_name = "apprunner-g3mg01-api"
-  ui_service_name  = "apprunner-g3mg01-ui"
+  # Cost-saving trick: no NAT Gateway, reuse public subnets
+  private_subnet_ids = data.aws_subnets.default.ids
 
-  # Correction : Utiliser "ecr_G3MG01" (avec majuscules) comme défini ligne 36
-  api_ecr_repo_url = module.ecr_G3MG01.repository_url
-  ui_ecr_repo_url  = module.ecr_G3MG01.repository_url
+  # ECR repository URL used by ECS to pull images
+  ecr_repository_url = module.ecr_G3MG01.repository_url
+
+  region = var.region
 }

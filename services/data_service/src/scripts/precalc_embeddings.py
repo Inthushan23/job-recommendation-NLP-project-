@@ -8,24 +8,26 @@ from ..domain.data_processing import ProcessData
 
 from ..config import BUCKET_NAME, S3_DATA_FOLDER 
 
+# Initialize S3 client
 s3 = boto3.client("s3")
 
 
-
+# Helper function to upload bytes data to S3
 def upload_to_s3(data: bytes, key: str):
-    """Upload un objet en mémoire dans S3"""
-    # Utilisation du dossier correct
+    """Upload an in-memory object to S3"""
     full_key = f"{S3_DATA_FOLDER}{key}"
     s3.put_object(Bucket=BUCKET_NAME, Key=full_key, Body=data)
-    print(f"Fichier uploadé dans S3: {full_key}")
+    print(f"File uploaded to S3: {full_key}")
 
 
+# Precompute embeddings for tastes and skills and store them in S3
 def precalculate_embeddings():
     tastes_df, _, skills_df = load_file()  
     encoder = Encoder()
     p = ProcessData
 
-    print("Vectorisation des Tastes...")
+    # Vectorize tastes
+    print("Vectorizing Tastes...")
     tastes_embeddings = encoder.encode(
         tastes_df["Tastes"].apply(p.normalize).tolist()
     )
@@ -37,14 +39,15 @@ def precalculate_embeddings():
         'dataframe': tastes_df.to_dict()
     }
 
-    # Upload dans S3
+    # Upload tastes embeddings
     upload_to_s3(pickle.dumps(tastes_data), "tastes_embeddings.pkl")
 
-    print("Vectorisation des Skills par domaine...")
+    # Vectorize skills for each domain
+    print("Vectorizing Skills by domain...")
     for domain in skills_df["Domain"].unique():
         domain_skills = skills_df[skills_df["Domain"] == domain].reset_index(drop=True)
         
-        print(f"Domain: {domain} - {len(domain_skills)} compétences")
+        print(f"Domain: {domain} - {len(domain_skills)} skills")
         
         skills_embeddings = encoder.encode(
             domain_skills["Skills"].apply(p.normalize).tolist()
@@ -63,7 +66,6 @@ def precalculate_embeddings():
         filename = f'skills_embeddings_{domain.replace(" ", "_")}.pkl'
         upload_to_s3(pickle.dumps(skills_data), filename)
         
-        
-        print(f"{domain}: {len(domain_skills)} skills vectorisés → {S3_DATA_FOLDER}{filename}")
+        print(f"{domain}: {len(domain_skills)} skills vectorized → {S3_DATA_FOLDER}{filename}")
     
-    print(f"Domaines traités: {list(skills_df['Domain'].unique())}")
+    print(f"Processed domains: {list(skills_df['Domain'].unique())}")

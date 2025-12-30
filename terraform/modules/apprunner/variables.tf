@@ -10,11 +10,10 @@ variable "ui_service_name" {
 
 variable "api_ecr_repo_url" {
   type        = string
-  description = "URL du repository ECR contenant l'image de l'API"
+  description = "URL du repository ECR pour l'API"
 }
 
 variable "ui_ecr_repo_url" {
   type        = string
-  description = "URL du repository ECR contenant l'image de l'UI"
+  description = "URL du repository ECR pour l'UI"
 }
-

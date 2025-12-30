@@ -1,5 +1,4 @@
-# modules/ecr/main.tf
-
+# ECR repository to store Docker images
 resource "aws_ecr_repository" "repo" {
   name                 = var.repo_name
   image_tag_mutability = "MUTABLE"
@@ -15,6 +14,7 @@ resource "aws_ecr_repository" "repo" {
   }
 }
 
+# Cleanup policy to avoid keeping too many images
 resource "aws_ecr_lifecycle_policy" "repo_policy" {
   repository = aws_ecr_repository.repo.name
 
