@@ -63,6 +63,7 @@ def precalculate_embeddings():
         filename = f'skills_embeddings_{domain.replace(" ", "_")}.pkl'
         upload_to_s3(pickle.dumps(skills_data), filename)
         
-        print(f"{domain}: {len(domain_skills)} skills vectorisés → {DATA_KEY}{filename}")
+        
+        print(f"{domain}: {len(domain_skills)} skills vectorisés → {S3_DATA_FOLDER}{filename}")
     
     print(f"Domaines traités: {list(skills_df['Domain'].unique())}")
